@@ -334,7 +334,6 @@ SCADA.get_Pub_Topic('scada_test')# Topic to subscribe
 SCADA.connect()
 SCADA.subscribe()
 
-delay_time = SCADA.data_sending_period
 
 tic = time.time()
 
@@ -342,7 +341,7 @@ while True:
     SCADA.loop()
     toc = time.time()
 
-    if (toc - tic) >= delay_time:
+    if (toc - tic) >= SCADA.data_sending_period:
         SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
         print(SCADA_Data_Json)
         SCADA.publish(payload= SCADA_Data_Json)
