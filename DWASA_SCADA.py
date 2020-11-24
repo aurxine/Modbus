@@ -302,7 +302,7 @@ class SCADA_Devices():
             self.SCADA_Data["Energy"]["Phase_B_Current"] = self.SCADA_Data["Energy"]["Active_Power"]/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
             self.SCADA_Data["Energy"]["Phase_C_Current"] = self.SCADA_Data["Energy"]["Active_Power"]/self.SCADA_Data["Energy"]["Phase_C_Voltage"]
             
-            self.SCADA_Data["Energy"]["Power_Factor"] = 0.97 + randint(-2, 2)/10
+            self.SCADA_Data["Energy"]["Power_Factor"] = 0.97 + randint(-2, 2)/100
             self.SCADA_Data["Energy"]["Load"] = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
             
             if self.SCADA_Data["Energy"]["Load"] != 0:
