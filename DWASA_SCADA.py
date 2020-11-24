@@ -236,6 +236,9 @@ class SCADA_Devices():
             self.mqtt_pub_topic = command["Pub_Topic"]
             self.mqtt_sub_topic = command["Sub_Topic"]
             self.mqtt_client.subscribe(self.mqtt_sub_topic)
+        elif command["Command"] == "Restart":
+            self.publish(topic= self.mqtt_pub_topic, payload= "Restarting")
+            self.restart()
         
         # elif command["Command"] == "ON":
         #     self.VFD.VFD_ON()
@@ -248,7 +251,12 @@ class SCADA_Devices():
         else:
             self.publish(self.mqtt_pub_topic, "Error in command")
             
-
+    def restart(self):
+        command = "/usr/bin/sudo /sbin/shutdown -r now"
+        import subprocess
+        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+        output = process.communicate()[0]
+        print(output)
 
     def updateParameters(self, Print = False, random = False):
         self.SCADA_Data["ID"] = self.ID
