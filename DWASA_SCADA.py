@@ -163,9 +163,6 @@ class SCADA_Devices():
     def loop(self):
         self.mqtt_client.loop()
 
-    def Data_Sending_Period(self):
-        return self.data_sending_period
-
 
     def get_ID(self, ID):
         self.ID = ID
@@ -227,8 +224,8 @@ class SCADA_Devices():
             self.get_ID(command["ID"])
             self.publish(self.mqtt_pub_topic, "New ID set successfully!")
         elif command["Command"] == "Change_Data_Sending_Period":
-            self.data_sending_period = command["Data_Sending_Period"]
-            self.publish(self.mqtt_pub_topic, "New period" + str(self.data_sending_period) + " seconds set successfully!")
+            self.data_sending_period = int(command["Data_Sending_Period"])
+            self.publish(self.mqtt_pub_topic, "New period " + str(self.data_sending_period) + " seconds set successfully!")
         elif command["Command"] == "Change_MQTT_Data":
             self.get_MQTT_Connection_Data(command["Address"], command["Port"])
             self.publish(self.mqtt_pub_topic, "New MQTT data set successfully!")
@@ -265,7 +262,7 @@ class SCADA_Devices():
     def updateParameters(self, Print = False, random = False):
         self.SCADA_Data["ID"] = self.ID
         self.SCADA_Data["Time_Stamp"] = self.makeTimeStamp()
-        self.SCADA_Data["Data_Sending_Period"] = self.Data_Sending_Period()
+        self.SCADA_Data["Data_Sending_Period"] = self.data_sending_period
 
         if not random:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
