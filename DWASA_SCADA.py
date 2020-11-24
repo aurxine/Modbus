@@ -224,7 +224,7 @@ class SCADA_Devices():
             self.publish(self.mqtt_pub_topic, "New ID set successfully!")
         elif command["Command"] == "Change_Data_Sending_Period":
             self.data_sending_period = command["Data_Sending_Period"]
-            self.publish(self.mqtt_pub_topic, "New period set successfully!")
+            self.publish(self.mqtt_pub_topic, "New period" + str(self.data_sending_period) + "set successfully!")
         elif command["Command"] == "Change_MQTT_Data":
             self.get_MQTT_Connection_Data(command["Address"], command["Port"])
             self.publish(self.mqtt_pub_topic, "New MQTT data set successfully!")
@@ -250,7 +250,7 @@ class SCADA_Devices():
 
         else:
             self.publish(self.mqtt_pub_topic, "Error in command")
-            
+    
     def restart(self):
         command = "/usr/bin/sudo /sbin/shutdown -r now"
         import subprocess
