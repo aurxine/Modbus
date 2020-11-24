@@ -291,18 +291,18 @@ class SCADA_Devices():
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] + self.SCADA_Data["Water_Data"]["Water_Flow"] * self.data_sending_period
             self.SCADA_Data["Water_Data"]["Water_Level"] = 50#self.Level_Transmitter.Water_Level(Print= Print)
         else:
-            self.SCADA_Data["Energy"]["Phase_A_Voltage"] = self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
-            self.SCADA_Data["Energy"]["Phase_B_Voltage"] = self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
-            self.SCADA_Data["Energy"]["Phase_C_Voltage"] = self.Energy_Meter.readVoltage(phase= 'C', Print = Print)
-            self.SCADA_Data["Energy"]["Line_AB_Voltage"] = self.Energy_Meter.readVoltage(line= 'AB', Print = Print)
-            self.SCADA_Data["Energy"]["Line_BC_Voltage"] = self.Energy_Meter.readVoltage(line= 'BC', Print = Print)
-            self.SCADA_Data["Energy"]["Line_CA_Voltage"] = self.Energy_Meter.readVoltage(line= 'CA', Print = Print)
-            self.SCADA_Data["Energy"]["Active_Power"] = self.VFD.readOutputPower()
-            self.SCADA_Data["Energy"]["Phase_A_Current"] = self.SCADA_Data["Energy"]["Active_Power"]*1000/self.SCADA_Data["Energy"]["Phase_A_Voltage"]
-            self.SCADA_Data["Energy"]["Phase_B_Current"] = self.SCADA_Data["Energy"]["Active_Power"]*1000/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
-            self.SCADA_Data["Energy"]["Phase_C_Current"] = self.SCADA_Data["Energy"]["Active_Power"]*1000/self.SCADA_Data["Energy"]["Phase_C_Voltage"]
+            self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
+            self.SCADA_Data["Energy"]["Phase_B_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
+            self.SCADA_Data["Energy"]["Phase_C_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'C', Print = Print)
+            self.SCADA_Data["Energy"]["Line_AB_Voltage"] = 415 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(line= 'AB', Print = Print)
+            self.SCADA_Data["Energy"]["Line_BC_Voltage"] = 415 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(line= 'BC', Print = Print)
+            self.SCADA_Data["Energy"]["Line_CA_Voltage"] = 415 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(line= 'CA', Print = Print)
+            self.SCADA_Data["Energy"]["Active_Power"] = 48900#self.VFD.readOutputPower()
+            self.SCADA_Data["Energy"]["Phase_A_Current"] = self.SCADA_Data["Energy"]["Active_Power"]/self.SCADA_Data["Energy"]["Phase_A_Voltage"]
+            self.SCADA_Data["Energy"]["Phase_B_Current"] = self.SCADA_Data["Energy"]["Active_Power"]/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
+            self.SCADA_Data["Energy"]["Phase_C_Current"] = self.SCADA_Data["Energy"]["Active_Power"]/self.SCADA_Data["Energy"]["Phase_C_Voltage"]
             
-            self.SCADA_Data["Energy"]["Power_Factor"] = 0.45 + randint(-2, 2)/10
+            self.SCADA_Data["Energy"]["Power_Factor"] = 0.97 + randint(-2, 2)/10
             self.SCADA_Data["Energy"]["Load"] = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
             
             if self.SCADA_Data["Energy"]["Load"] != 0:
@@ -312,9 +312,9 @@ class SCADA_Devices():
             self.SCADA_Data["VFD"]["Frequency"] = 50
             self.SCADA_Data["VFD"]["Motor_Operating_Voltage"] = self.SCADA_Data["Energy"]["Line_AB_Voltage"]
             self.SCADA_Data["VFD"]["Motor_Operating_Current"] = self.SCADA_Data["Energy"]["Phase_A_Current"]
-            self.SCADA_Data["VFD"]["RPM"] = 2100
+            self.SCADA_Data["VFD"]["RPM"] = 3000
 
-            self.SCADA_Data["Water_Data"]["Water_Flow"] = 1000
+            self.SCADA_Data["Water_Data"]["Water_Flow"] = 2 + randint(-1, 1)/10
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 341 # random value
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] += self.SCADA_Data["Water_Data"]["Water_Flow"]
             self.SCADA_Data["Water_Data"]["Water_Level"] = 25
@@ -342,7 +342,7 @@ while True:
     toc = time.time()
 
     if (toc - tic) >= SCADA.data_sending_period:
-        SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
+        SCADA_Data_Json = SCADA.updateParameters(random= True, Print = True)
         print(SCADA_Data_Json)
         SCADA.publish(payload= SCADA_Data_Json)
         tic = toc
