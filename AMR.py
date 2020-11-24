@@ -42,6 +42,7 @@ class AMR():
         # This is for keeping track of water flow per unit time
         self.tic = time.time()
         self.toc = 0
+        self.current_flow_rate = 0
         
         # This will be used for unit conversion
         # Standard unit for time is 1 second and standard unit for volume is 1 cubic meter (cm)
@@ -64,6 +65,9 @@ class AMR():
         
     def pulse_counter(self, channel):
         self.pulse_count += 1
+        self.toc = time.time()
+        self.current_flow_rate = self.flow_per_pulse / (self.toc - self.tic) * self.units[self.time_unit]
+        self.tic = self.toc
         print(self.pulse_count)
     
     def get_flow_unit(self, flow_unit = 'cm'):
@@ -95,18 +99,19 @@ class AMR():
         return self.flow_unit
     
     def flow_rate(self):
-        self.toc = time.time()
-        elapsed_time = (self.toc - self.tic)/self.units[self.time_unit]
-        #print("Time elapsed:", elapsed_time)
-        self.tic = time.time()
-        water_flow = ((self.pulse_count - self.prev_pulse_count)*self.flow_per_pulse)*self.units[self.flow_unit]
-        #print("Water Flow:", water_flow)
-        self.prev_pulse_count = self.pulse_count
-        return 2
-        if elapsed_time != 0:
-            return water_flow/elapsed_time
-        else:
-            return 0
+        return self.current_flow_rate
+        # self.toc = time.time()
+        # elapsed_time = (self.toc - self.tic)/self.units[self.time_unit]
+        # #print("Time elapsed:", elapsed_time)
+        # self.tic = time.time()
+        # water_flow = ((self.pulse_count - self.prev_pulse_count)*self.flow_per_pulse)*self.units[self.flow_unit]
+        # #print("Water Flow:", water_flow)
+        # self.prev_pulse_count = self.pulse_count
+        # return 2
+        # if elapsed_time != 0:
+        #     return water_flow/elapsed_time
+        # else:
+        #     return 0
     
     def flow_rate_unit(self):
         return self.flow_unit + "/" + self.time_unit
