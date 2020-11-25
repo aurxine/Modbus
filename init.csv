@@ -1,0 +1,2 @@
+port,method,baudrate,timeout,parity,stopbits,bytesize,vfd_slaveAddress,energy_meter_slaveAddress,level_transmitter_slaveAddress,amr_mode,amr_pin,amr_flow_per_pulse,amr_past_water_flow,ID,data_sending_period,broker_address,broker_port
+'/dev/ttyUSB0','rtu',9600,3,E,1,8,6,3,2,BCM,24,10,,,60,123.49.33.109,8083
