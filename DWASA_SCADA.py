@@ -155,7 +155,7 @@ class SCADA_Devices():
     
     def publish(self, topic = None, payload = ''):
         if topic == None:
-            self.mqtt_client.publish(self.mqtt_pub_topic, payload)
+            self.mqtt_client.publish(self.mqtt_pub_topic, payload, retain= True, qos= 1)
         else:
             self.mqtt_pub_topic = topic
             self.mqtt_client.publish(self.mqtt_pub_topic, payload, retain= True, qos= 1)
