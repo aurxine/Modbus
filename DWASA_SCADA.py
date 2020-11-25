@@ -22,6 +22,8 @@ from VFD import VFD_F800
 import os
 from AMR import AMR
 from pymodbus.client.sync import ModbusSerialClient
+import pandas as pd
+import sys
 
 
 class SCADA_Devices():
@@ -323,10 +325,18 @@ class SCADA_Devices():
         return json.dumps(self.SCADA_Data)
 
 
-SCADA = SCADA_Devices()
+init = pd.read_csv(sys.argv[1])
 
-broker = '123.49.33.109' #MQTT broker address
-port = 8083 #MQTT broker port
+
+SCADA = SCADA_Devices(port=init.loc[0]['port'], method=init.loc[0]['method'], baudrate=init.loc[0]['baudrate'], timeout=init.loc[0]['timeout'],
+    parity=init.loc[0]['parity'], stopbits=int(init.loc[0]['stopbits']), bytesize=int(init.loc[0]['bytesize']), vfd_slaveAddress=int(init.loc[0]['vfd_slaveAddress']),
+    energy_meter_slaveAddress=int(init['energy_meter_slaveAddress']), level_transmitter_slaveAddress=int(init['level_transmitter_slaveAddress']),
+    amr_mode=init.loc[0]['amr_mode'], amr_pin=int(init.loc[0]['amr_pin']), amr_flow_per_pulse=int(init.loc[0]['amr_flow_per_pulse']),
+    amr_past_water_flow=init.loc[0]['amr_past_water_flow'], ID=init.loc[0]['ID'], data_sending_period=init.loc[0]['data_sending_period'])
+
+
+broker = init.loc[0]['broker_address'] #'123.49.33.109' #MQTT broker address
+port = init.loc[0]['broker_port'] #8083 #MQTT broker port
 SCADA.get_MQTT_Address(broker)
 SCADA.get_MQTT_Port(port)
 SCADA.get_Sub_Topic('scada_sub')# Topic to publish
