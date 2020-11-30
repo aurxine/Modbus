@@ -20,17 +20,18 @@ from Energy_Meter import EnergyMeter_DZS500
 from Level_Transmitter import AR6451
 from VFD import VFD_F800
 import os
-from AMR import AMR
+#from AMR import AMR
 from pymodbus.client.sync import ModbusSerialClient
 import pandas as pd
 import sys
+from Pro_mini import Pro_mini
 
 
 class SCADA_Devices():
-    def __init__(self, port = '/dev/ttyUSB0', method='rtu', baudrate=9600, timeout=3, 
+    def __init__(self, port = '/dev/ttyUSB0', Serial_port = '/dev/ttyUSB1', method='rtu', baudrate=9600, timeout=3, 
         parity='E', stopbits=1, bytesize=8, vfd_slaveAddress = 6, energy_meter_slaveAddress = 3, 
-        level_transmitter_slaveAddress = 2, amr_mode = 'BCM', amr_pin = 24, amr_flow_per_pulse = 10,
-        amr_past_water_flow = 5, ID = 1300, data_sending_period = 60, dataframe=None):
+        level_transmitter_slaveAddress = 2, amr_flow_per_pulse = 10,
+        amr_past_water_flow = 10000, ID = 1500, data_sending_period = 60):
         
         #Read ID from file
         # Foysal, change this to read from the csv file
@@ -59,8 +60,8 @@ class SCADA_Devices():
         self.VFD = VFD_F800(client = self.client, slaveAddress= vfd_slaveAddress)
         self.Level_Transmitter = AR6451(client = self.client, slaveAddress= level_transmitter_slaveAddress)
         self.Energy_Meter = EnergyMeter_DZS500(client = self.client, slaveAddress= energy_meter_slaveAddress)
-        self.AMR = AMR(mode= amr_mode, pin= amr_pin, flow_per_pulse= amr_flow_per_pulse, past_water_flow = amr_past_water_flow)
-        
+        self.Pro_mini = Pro_mini(Serial_port = Serial_port, flow_per_pulse= amr_flow_per_pulse, 
+                                    past_water_flow= amr_past_water_flow)
         self.data_sending_period = data_sending_period
         self.mqtt_client = mqtt.Client("Client", transport= 'websockets')
         self.mqtt_client.on_message = self.on_message
@@ -178,18 +179,6 @@ class SCADA_Devices():
     
     def get_Level_Transmitter_Address(self, address = 2):
         self.Level_Transmitter.get_Address(address= address)
-
-    def get_AMR_Flow_Per_Pulse(self, flow_per_pulse):
-        self.AMR.get_flow_per_pulse(flow_per_pulse= flow_per_pulse)
-    
-    def get_AMR_Flow_Unit(self, flow_unit):
-        self.AMR.get_flow_unit(flow_unit= flow_unit)
-    
-    def get_AMR_Time_Unit(self, time_unit):
-        self.AMR.get_time_unit(time_unit= time_unit)
-
-    def reset_Counter(self):
-        self.AMR.reset_counter()
         
     def makeTimeStamp(self):
         now = datetime.now()
@@ -254,13 +243,13 @@ class SCADA_Devices():
             self.publish(topic= self.mqtt_pub_topic, payload= "Restarting")
             self.restart()
         
-        # elif command["Command"] == "ON":
-        #     self.VFD.VFD_ON()
-        #     self.publish(self.mqtt_pub_topic, "VFD Turned ON")
+        elif command["Command"] == "ON":
+            self.Pro_mini.VFD_On()
+            self.publish(self.mqtt_pub_topic, "VFD Turned ON")
         
-        # elif command["Command"] == "ON":
-        #     self.VFD.VFD_OFF()
-        #     self.publish(self.mqtt_pub_topic, "VFD Turned OFF")
+        elif command["Command"] == "OFF":
+            self.Pro_mini.VFD_Off()
+            self.publish(self.mqtt_pub_topic, "VFD Turned OFF")
 
         else:
             self.publish(self.mqtt_pub_topic, "Error in command")
@@ -300,9 +289,11 @@ class SCADA_Devices():
             self.SCADA_Data["VFD"]["Motor_Operating_Current"] = self.VFD.readOutputCurrent(Print= Print)
             self.SCADA_Data["VFD"]["RPM"] = 3000#self.VFD.readRunningSpeed(Print= Print)
 
-            self.SCADA_Data["Water_Data"]["Water_Flow"] = 2 + randint(-5, 5) * 0.1#self.AMR.flow_rate()
+            self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 341 # random value
-            self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] + self.SCADA_Data["Water_Data"]["Water_Flow"] * self.data_sending_period
+            self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
+            # # Foysal
+            # save latest water meter reading
             self.SCADA_Data["Water_Data"]["Water_Level"] = 50#self.Level_Transmitter.Water_Level(Print= Print)
         else:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
@@ -356,6 +347,7 @@ amr_flow_per_pulse = int(init.iloc[params.index('amr_flow_per_pulse'), 1])
 amr_past_water_flow = int(init.iloc[params.index('amr_past_water_flow'), 1])
 ID = int(init.iloc[params.index('ID'), 1])
 data_sending_period = int(init.iloc[params.index('data_sending_period'), 1])
+
 
 
 SCADA = SCADA_Devices(port=port, method=method, baudrate=baudrate, timeout=timeout,
