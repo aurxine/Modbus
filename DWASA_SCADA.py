@@ -326,8 +326,9 @@ class SCADA_Devices():
 
         return json.dumps(self.SCADA_Data)
 
-
-init = pd.read_csv('init.csv')
+current_folder = os.path.dirname(os.path.abspath(__file__))
+init_file = os.path.join(current_folder, 'init.csv')
+init = pd.read_csv(init_file)
 
 params = list(init['parameters'])
 
