@@ -100,9 +100,9 @@ class Pro_mini():
         self.give_Command(self.commands["Get_Level"])
     
 
-if __name__ == "__main__":
-    pro_mini = Pro_mini(Serial_port= 'COM3')
-    while True:
-        # print(pro_mini.get_Flow_Count())
-        print(pro_mini.get_Total_Water_Passed())
-        time.sleep(2)
+# if __name__ == "__main__":
+#     pro_mini = Pro_mini(Serial_port= 'COM3')
+#     while True:
+#         # print(pro_mini.get_Flow_Count())
+#         print(pro_mini.get_Total_Water_Passed())
+#         time.sleep(2)
