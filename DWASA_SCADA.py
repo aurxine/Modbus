@@ -30,21 +30,15 @@ class SCADA_Devices():
     def __init__(self, port = '/dev/ttyUSB0', method='rtu', baudrate=9600, timeout=3, 
         parity='E', stopbits=1, bytesize=8, vfd_slaveAddress = 6, energy_meter_slaveAddress = 3, 
         level_transmitter_slaveAddress = 2, amr_mode = 'BCM', amr_pin = 24, amr_flow_per_pulse = 10,
-        amr_past_water_flow = None, ID = None, data_sending_period = 60):
+        amr_past_water_flow = 5, ID = 1300, data_sending_period = 60, dataframe=None):
         
         #Read ID from file
         # Foysal, change this to read from the csv file
-        if ID != None:
-            self.ID_file = open("ID.txt", 'x')
-            self.ID_file.write(str(ID))
-        else:
-            current_folder = os.path.dirname(os.path.abspath(__file__))
-            ID_file = os.path.join(current_folder, 'ID.txt')
-            self.ID_file = open(ID_file, 'r')
-            ID = int(self.ID_file.read())
-        self.ID = ID
-        self.ID_file.close()
-        
+        self.dataframe = init
+        self.params = list(init['parameters'])
+
+    
+        self.ID = ID        
         self.port = port
         self.method = method
         self.baudrate = baudrate
@@ -117,8 +111,13 @@ class SCADA_Devices():
     def get_MQTT_Connection_Data(self, address, port):
         self.mqtt_address = address
         self.mqtt_port = port
+
         #Foysal
         #address and port will be updated here
+        self.dataframe.iloc[params.index('broker_port'), 1] = port
+        self.dataframe.iloc[params.index('broker_address'), 1] = address
+
+        self.dataframe.to_csv('init.csv', index=False)
 
     def MQTT_Address(self):
         return self.mqtt_address
@@ -170,9 +169,6 @@ class SCADA_Devices():
 
     def get_ID(self, ID):
         self.ID = ID
-        self.ID_file = open('ID.txt', 'w+')
-        self.ID_file.write(str(ID))
-        self.ID_file.close()
 
     def get_VFD_Address(self, address = 0):
         self.VFD.get_Address(address= address)
@@ -231,6 +227,9 @@ class SCADA_Devices():
             self.data_sending_period = int(command["Data_Sending_Period"])
             # Foysal
             # data sending period will be updated here in the fille
+            self.dataframe.iloc[params.index('data_sending_period'),1] = self.data_sending_period
+            self.dataframe.to_csv('init.csv', index=False)
+
             self.publish(self.mqtt_pub_topic, "New period " + str(self.data_sending_period) + " seconds set successfully!")
         elif command["Command"] == "Change_MQTT_Data":
             self.get_MQTT_Connection_Data(command["Address"], command["Port"])
@@ -245,6 +244,12 @@ class SCADA_Devices():
             self.mqtt_pub_topic = command["Pub_Topic"]
             self.mqtt_sub_topic = command["Sub_Topic"]
             self.mqtt_client.subscribe(self.mqtt_sub_topic)
+
+            self.dataframe.iloc[params.index('pub_topic'), 1] = self.mqtt_pub_topic
+            self.dataframe.iloc[params.index('sub_topic'), 1] = self.mqtt_sub_topic
+
+            self.dataframe.to_csv('init.csv', index=False)
+
         elif command["Command"] == "Restart":
             self.publish(topic= self.mqtt_pub_topic, payload= "Restarting")
             self.restart()
@@ -331,18 +336,37 @@ class SCADA_Devices():
         return json.dumps(self.SCADA_Data)
 
 
-init = pd.read_csv(sys.argv[1])
+init = pd.read_csv('init.csv')
+
+params = list(init['parameters'])
+
+port = init.iloc[params.index('port'), 1]
+method = init.iloc[params.index('method'), 1]
+baudrate = int(init.iloc[params.index('baudrate'), 1])
+timeout = int(init.iloc[params.index('timeout'), 1])
+parity = init.iloc[params.index('parity'), 1]
+stopbits = int(init.iloc[params.index('stopbits'), 1])
+bytesize = int(init.iloc[params.index('bytesize'), 1])
+vfd_slaveAddress = int(init.iloc[params.index('vfd_slaveAddress'), 1])
+energy_meter_slaveAddress = int(init.iloc[params.index('energy_meter_slaveAddress'), 1])
+level_transmitter_slaveAddress = int(init.iloc[params.index('level_transmitter_slaveAddress'), 1])
+amr_mode = init.iloc[params.index('amr_mode'), 1]
+amr_pin = int(init.iloc[params.index('amr_pin'), 1])
+amr_flow_per_pulse = int(init.iloc[params.index('amr_flow_per_pulse'), 1])
+amr_past_water_flow = int(init.iloc[params.index('amr_past_water_flow'), 1])
+ID = int(init.iloc[params.index('ID'), 1])
+data_sending_period = int(init.iloc[params.index('data_sending_period'), 1])
 
 
-SCADA = SCADA_Devices(port=init.loc[0]['port'], method=init.loc[0]['method'], baudrate=init.loc[0]['baudrate'], timeout=init.loc[0]['timeout'],
-    parity=init.loc[0]['parity'], stopbits=int(init.loc[0]['stopbits']), bytesize=int(init.loc[0]['bytesize']), vfd_slaveAddress=int(init.loc[0]['vfd_slaveAddress']),
-    energy_meter_slaveAddress=int(init['energy_meter_slaveAddress']), level_transmitter_slaveAddress=int(init['level_transmitter_slaveAddress']),
-    amr_mode=init.loc[0]['amr_mode'], amr_pin=int(init.loc[0]['amr_pin']), amr_flow_per_pulse=int(init.loc[0]['amr_flow_per_pulse']),
-    amr_past_water_flow=init.loc[0]['amr_past_water_flow'], ID=init.loc[0]['ID'], data_sending_period=init.loc[0]['data_sending_period'])
+SCADA = SCADA_Devices(port=port, method=method, baudrate=baudrate, timeout=timeout,
+    parity=parity, stopbits=stopbits, bytesize=bytesize, vfd_slaveAddress=vfd_slaveAddress,
+    energy_meter_slaveAddress=energy_meter_slaveAddress, level_transmitter_slaveAddress=level_transmitter_slaveAddress,
+    amr_mode=amr_mode, amr_pin=amr_pin, amr_flow_per_pulse=amr_flow_per_pulse,
+    amr_past_water_flow=amr_past_water_flow, ID=ID, data_sending_period=data_sending_period, dataframe=init)
 
 
-broker = init.loc[0]['broker_address'] #'123.49.33.109' #MQTT broker address
-port = init.loc[0]['broker_port'] #8083 #MQTT broker port
+broker =  init.iloc[params.index('broker_address'), 1] #'123.49.33.109' #MQTT broker address
+port = int(init.iloc[params.index('broker_port'), 1]) #8083 #MQTT broker port
 SCADA.get_MQTT_Address(broker)
 SCADA.get_MQTT_Port(port)
 SCADA.get_Sub_Topic('scada_sub')# Topic to publish
