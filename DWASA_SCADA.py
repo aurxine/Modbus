@@ -30,8 +30,8 @@ from Pro_mini import Pro_mini
 class SCADA_Devices():
     def __init__(self, port = '/dev/ttyUSB0', Serial_port = '/dev/ttyUSB1', method='rtu', baudrate=9600, timeout=3, 
         parity='E', stopbits=1, bytesize=8, vfd_slaveAddress = 6, energy_meter_slaveAddress = 3, 
-        level_transmitter_slaveAddress = 2, amr_mode = 'BCM', amr_pin = 24, amr_flow_per_pulse = 10,
-        amr_past_water_flow = None, ID = None, data_sending_period = 60):
+        level_transmitter_slaveAddress = 2, amr_flow_per_pulse = 10,
+        amr_past_water_flow = 10000, ID = 1500, data_sending_period = 60):
         
         #Read ID from file
         # Foysal, change this to read from the csv file
