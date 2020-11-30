@@ -33,7 +33,7 @@ class SCADA_Devices():
         amr_past_water_flow = None, ID = None, data_sending_period = 60):
         
         #Read ID from file
-        
+        # Foysal, change this to read from the csv file
         if ID != None:
             self.ID_file = open("ID.txt", 'x')
             self.ID_file.write(str(ID))
@@ -117,6 +117,8 @@ class SCADA_Devices():
     def get_MQTT_Connection_Data(self, address, port):
         self.mqtt_address = address
         self.mqtt_port = port
+        #Foysal
+        #address and port will be updated here
 
     def MQTT_Address(self):
         return self.mqtt_address
@@ -227,14 +229,18 @@ class SCADA_Devices():
             self.publish(self.mqtt_pub_topic, "New ID set successfully!")
         elif command["Command"] == "Change_Data_Sending_Period":
             self.data_sending_period = int(command["Data_Sending_Period"])
+            # Foysal
+            # data sending period will be updated here in the fille
             self.publish(self.mqtt_pub_topic, "New period " + str(self.data_sending_period) + " seconds set successfully!")
         elif command["Command"] == "Change_MQTT_Data":
             self.get_MQTT_Connection_Data(command["Address"], command["Port"])
             self.publish(self.mqtt_pub_topic, "New MQTT data set successfully!")
-            #self.disconnect() # disconnect from previous IP
-            self.connect() # connect to new IP
-            #self.subscribe(self.mqtt_sub_topic)
+            self.publish(self.mqtt_pub_topic, "Restarting")
+            self.restart()
         elif command["Command"] == "Change_Topic":
+            #Foysal
+            #add pub_topic and sub_topic to the csv file
+            #new pub and sub topic will be updated here
             self.mqtt_client.unsubscribe(self.mqtt_sub_topic)
             self.mqtt_pub_topic = command["Pub_Topic"]
             self.mqtt_sub_topic = command["Sub_Topic"]
