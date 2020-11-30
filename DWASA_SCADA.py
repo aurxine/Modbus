@@ -327,8 +327,7 @@ init = pd.read_csv(sys.argv[1])
 
 SCADA = SCADA_Devices(port=init.loc[0]['port'], method=init.loc[0]['method'], baudrate=init.loc[0]['baudrate'], timeout=init.loc[0]['timeout'],
     parity=init.loc[0]['parity'], stopbits=int(init.loc[0]['stopbits']), bytesize=int(init.loc[0]['bytesize']), vfd_slaveAddress=int(init.loc[0]['vfd_slaveAddress']),
-    energy_meter_slaveAddress=int(init['energy_meter_slaveAddress']), level_transmitter_slaveAddress=int(init['level_transmitter_slaveAddress']),
-    amr_mode=init.loc[0]['amr_mode'], amr_pin=int(init.loc[0]['amr_pin']), amr_flow_per_pulse=int(init.loc[0]['amr_flow_per_pulse']),
+    energy_meter_slaveAddress=int(init['energy_meter_slaveAddress']), level_transmitter_slaveAddress=int(init['level_transmitter_slaveAddress']), amr_flow_per_pulse=int(init.loc[0]['amr_flow_per_pulse']),
     amr_past_water_flow=init.loc[0]['amr_past_water_flow'], ID=init.loc[0]['ID'], data_sending_period=init.loc[0]['data_sending_period'])
 
 
