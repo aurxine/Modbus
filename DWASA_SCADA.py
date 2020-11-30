@@ -292,8 +292,8 @@ class SCADA_Devices():
             self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 341 # random value
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
-            # # Foysal
-            # save latest water meter reading
+            self.dataframe.iloc[params.index('amr_past_water_flow'),1] = self.SCADA_Data["Water_Data"]["Water_Meter_Reading"]
+            self.dataframe.to_csv('init.csv', index=False)
             self.SCADA_Data["Water_Data"]["Water_Level"] = 50#self.Level_Transmitter.Water_Level(Print= Print)
         else:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)

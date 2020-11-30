@@ -1,5 +1,6 @@
 parameters,value
 port,/dev/ttyUSB0
+Serial_port,/dev/ttyUSB1
 method,rtu
 baudrate,9600
 timeout,3
@@ -9,11 +10,9 @@ bytesize,8
 vfd_slaveAddress,6
 energy_meter_slaveAddress,3
 level_transmitter_slaveAddress,2
-amr_mode,BCM
-amr_pin,24
-amr_flow_per_pulse,10
-amr_past_water_flow,5
-ID,1300
+amr_flow_per_pulse,1
+amr_past_water_flow,10000
+ID,1500
 data_sending_period,20
 broker_address,123.49.33.109
 broker_port,8083
