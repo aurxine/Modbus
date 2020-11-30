@@ -332,6 +332,7 @@ init = pd.read_csv('init.csv')
 params = list(init['parameters'])
 
 port = init.iloc[params.index('port'), 1]
+Serial_port = init.iloc[params.index('Serial_port'), 1]
 method = init.iloc[params.index('method'), 1]
 baudrate = int(init.iloc[params.index('baudrate'), 1])
 timeout = int(init.iloc[params.index('timeout'), 1])
@@ -350,7 +351,7 @@ data_sending_period = int(init.iloc[params.index('data_sending_period'), 1])
 
 print(init)
 
-SCADA = SCADA_Devices(port=port, method=method, baudrate=baudrate, timeout=timeout,
+SCADA = SCADA_Devices(port=port, Serial_port=Serial_port, method=method, baudrate=baudrate, timeout=timeout,
     parity=parity, stopbits=stopbits, bytesize=bytesize, vfd_slaveAddress=vfd_slaveAddress,
     energy_meter_slaveAddress=energy_meter_slaveAddress,
     level_transmitter_slaveAddress=level_transmitter_slaveAddress, amr_flow_per_pulse=amr_flow_per_pulse,
