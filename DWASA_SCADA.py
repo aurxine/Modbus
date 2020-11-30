@@ -31,7 +31,7 @@ class SCADA_Devices():
     def __init__(self, port = '/dev/ttyUSB0', Serial_port = '/dev/ttyUSB1', method='rtu', baudrate=9600, timeout=3, 
         parity='E', stopbits=1, bytesize=8, vfd_slaveAddress = 6, energy_meter_slaveAddress = 3, 
         level_transmitter_slaveAddress = 2, amr_flow_per_pulse = 10,
-        amr_past_water_flow = 10000, ID = 1500, data_sending_period = 60):
+        amr_past_water_flow = 10000, ID = 1500, data_sending_period = 60, dataframe = None):
         
         #Read ID from file
         # Foysal, change this to read from the csv file
@@ -348,12 +348,12 @@ amr_past_water_flow = int(init.iloc[params.index('amr_past_water_flow'), 1])
 ID = int(init.iloc[params.index('ID'), 1])
 data_sending_period = int(init.iloc[params.index('data_sending_period'), 1])
 
-
+print(init)
 
 SCADA = SCADA_Devices(port=port, method=method, baudrate=baudrate, timeout=timeout,
     parity=parity, stopbits=stopbits, bytesize=bytesize, vfd_slaveAddress=vfd_slaveAddress,
-    energy_meter_slaveAddress=energy_meter_slaveAddress, level_transmitter_slaveAddress=level_transmitter_slaveAddress,
-    amr_mode=amr_mode, amr_pin=amr_pin, amr_flow_per_pulse=amr_flow_per_pulse,
+    energy_meter_slaveAddress=energy_meter_slaveAddress,
+    level_transmitter_slaveAddress=level_transmitter_slaveAddress, amr_flow_per_pulse=amr_flow_per_pulse,
     amr_past_water_flow=amr_past_water_flow, ID=ID, data_sending_period=data_sending_period, dataframe=init)
 
 

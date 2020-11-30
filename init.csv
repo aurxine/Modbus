@@ -14,7 +14,7 @@ amr_pin,24
 amr_flow_per_pulse,10
 amr_past_water_flow,5
 ID,1300
-data_sending_period,60
+data_sending_period,20
 broker_address,123.49.33.109
 broker_port,8083
 pub_topic,scada_test

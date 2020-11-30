@@ -18,8 +18,7 @@ class VFD_F800():
         
         self.slaveAddress = slaveAddress
         self.client = client
-        self.On_pin = On_pin
-        self.Off_pin = Off_pin
+
     
     # def VFD_ON(self):
     #     GPIO.output(self.On_pin, 1)
