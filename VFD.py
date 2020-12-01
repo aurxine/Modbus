@@ -205,7 +205,7 @@ class VFD_F800():
         if self.client.connect():
             print("Connected to the VFD")
             # Writing to a holding register with the below content.
-            self.client.write_register(address=14, value = frequency_value)
+            self.client.write_register(address=1000, value = frequency_value)
             
         else:
             print('Cannot connect to the VFD')
