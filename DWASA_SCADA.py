@@ -68,7 +68,7 @@ class SCADA_Devices():
         self.command = ''
         self.last_command = ''
         self.mqtt_pub_topic = 'scada_test'
-        self.mqtt_sub_topic = 'scada_sub'
+        self.mqtt_sub_topic = 'scada_pub'
         
         self.SCADA_Data = {
                 "ID":1500,
