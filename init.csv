@@ -1,6 +1,6 @@
 parameters,value
-port,/dev/ttyUSB0
-Serial_port,/dev/ttyUSB1
+port,/dev/ttyUSB_RS485
+Serial_port,/dev/ttyUSB_Pro_mini
 method,rtu
 baudrate,9600
 timeout,3
