@@ -11,7 +11,7 @@ vfd_slaveAddress,6
 energy_meter_slaveAddress,3
 level_transmitter_slaveAddress,2
 amr_flow_per_pulse,1
-amr_past_water_flow,10000
+amr_past_water_flow,66260
 ID,1500
 data_sending_period,20
 broker_address,123.49.33.109
