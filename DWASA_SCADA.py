@@ -375,7 +375,7 @@ while True:
     toc = time.time()
 
     if (toc - tic) >= SCADA.data_sending_period:
-        SCADA_Data_Json = SCADA.updateParameters(random= True, Print = True)
+        SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
         print(SCADA_Data_Json)
         SCADA.publish(payload= SCADA_Data_Json)
         tic = toc
