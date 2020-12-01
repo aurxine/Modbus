@@ -361,8 +361,8 @@ broker =  init.iloc[params.index('broker_address'), 1] #'123.49.33.109' #MQTT br
 port = int(init.iloc[params.index('broker_port'), 1]) #8083 #MQTT broker port
 SCADA.get_MQTT_Address(broker)
 SCADA.get_MQTT_Port(port)
-SCADA.get_Sub_Topic('scada_sub')# Topic to publish
-SCADA.get_Pub_Topic('scada_test')# Topic to subscribe
+SCADA.get_Sub_Topic(init.iloc[params.index('sub_topic'), 1])# Topic to publish
+SCADA.get_Pub_Topic(init.iloc[params.index('pub_topic'), 1])# Topic to subscribe
 
 SCADA.connect()
 SCADA.subscribe()
