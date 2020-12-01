@@ -17,4 +17,4 @@ data_sending_period,20
 broker_address,123.49.33.109
 broker_port,8083
 pub_topic,scada_test
-sub_topic,scada_sub
+sub_topic,scada_pub
