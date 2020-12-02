@@ -32,9 +32,7 @@ class SCADA_Devices():
         parity='E', stopbits=1, bytesize=8, vfd_slaveAddress = 6, energy_meter_slaveAddress = 3, 
         level_transmitter_slaveAddress = 2, amr_flow_per_pulse = 10,
         amr_past_water_flow = 10000, ID = 1500, data_sending_period = 60, dataframe = None):
-        
-        #Read ID from file
-        # Foysal, change this to read from the csv file
+
         self.dataframe = init
         self.params = list(init['parameters'])
 
@@ -113,8 +111,6 @@ class SCADA_Devices():
         self.mqtt_address = address
         self.mqtt_port = port
 
-        #Foysal
-        #address and port will be updated here
         self.dataframe.iloc[params.index('broker_port'), 1] = port
         self.dataframe.iloc[params.index('broker_address'), 1] = address
 
@@ -214,8 +210,6 @@ class SCADA_Devices():
             self.publish(self.mqtt_pub_topic, "New ID set successfully!")
         elif command["Command"] == "Change_Data_Sending_Period":
             self.data_sending_period = int(command["Data_Sending_Period"])
-            # Foysal
-            # data sending period will be updated here in the fille
             self.dataframe.iloc[params.index('data_sending_period'),1] = self.data_sending_period
             self.dataframe.to_csv('init.csv', index=False)
 
@@ -226,9 +220,6 @@ class SCADA_Devices():
             self.publish(self.mqtt_pub_topic, "Restarting")
             self.restart()
         elif command["Command"] == "Change_Topic":
-            #Foysal
-            #add pub_topic and sub_topic to the csv file
-            #new pub and sub topic will be updated here
             self.mqtt_client.unsubscribe(self.mqtt_sub_topic)
             self.mqtt_pub_topic = command["Pub_Topic"]
             self.mqtt_sub_topic = command["Sub_Topic"]
@@ -243,6 +234,12 @@ class SCADA_Devices():
             frequency = int(command["Frequency"])*100
             self.VFD.writeRunningFrequency(frequency_value= frequency)
             self.publish(topic= self.mqtt_pub_topic, payload= "Frequency changed to " + str(frequency/100) + " Hz")
+
+        elif command["Command"] == "Change_Past_Water_Flow":
+            past_water_flow = int(command["Past_Water_Flow"])
+            self.save_Water_Flow(water_flow= past_water_flow)
+            self.Pro_mini.put_Past_Water_Flow(water_flow= past_water_flow)
+            self.publish(topic= self.mqtt_pub_topic, payload= "Water Passed " + str(past_water_flow) + " cubic meter")
 
         elif command["Command"] == "Restart":
             self.publish(topic= self.mqtt_pub_topic, payload= "Restarting")
@@ -259,6 +256,10 @@ class SCADA_Devices():
         else:
             self.publish(self.mqtt_pub_topic, "Error in command")
     
+    def save_Water_Flow(self, water_flow):
+        self.dataframe.iloc[params.index('amr_past_water_flow'),1] = water_flow
+        self.dataframe.to_csv('init.csv', index=False)
+
     def restart(self):
         command = "/usr/bin/sudo /sbin/shutdown -r now"
         import subprocess
@@ -297,8 +298,7 @@ class SCADA_Devices():
             self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
-            self.dataframe.iloc[params.index('amr_past_water_flow'),1] = self.SCADA_Data["Water_Data"]["Water_Meter_Reading"]
-            self.dataframe.to_csv('init.csv', index=False)
+            self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
             self.SCADA_Data["Water_Data"]["Water_Level"] = 0#self.Level_Transmitter.Water_Level(Print= Print)
         else:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
