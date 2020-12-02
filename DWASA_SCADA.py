@@ -297,7 +297,7 @@ class SCADA_Devices():
             self.SCADA_Data["VFD"]["Frequency"] = self.VFD.readOutputFrequency(Print= Print)
             self.SCADA_Data["VFD"]["Motor_Operating_Voltage"] = self.VFD.readOutputVoltage(Print= Print)
             self.SCADA_Data["VFD"]["Motor_Operating_Current"] = self.VFD.readOutputCurrent(Print= Print)
-            self.SCADA_Data["VFD"]["RPM"] = self.SCADA_Data["VFD"]["Frequency"] * 120 / 102#self.VFD.readRunningSpeed(Print= Print)
+            self.SCADA_Data["VFD"]["RPM"] = self.SCADA_Data["VFD"]["Frequency"] * 12000 / 102#self.VFD.readRunningSpeed(Print= Print)
 
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
