@@ -388,6 +388,8 @@ while True:
     if(water_toc - water_tic) >= 31:
         if SCADA.SCADA_Data["VFD"]["VFD_Status"] == 1:
             SCADA.total_water_passed += 1
+        else:
+            print("Nothing's happening")
         water_tic = water_toc
         #print(SCADA.total_water_passed)
 
