@@ -55,6 +55,7 @@ class SCADA_Devices():
             bytesize = self.bytesize
         )
 
+        self.total_water_passed = amr_past_water_flow
         self.VFD = VFD_F800(client = self.client, slaveAddress= vfd_slaveAddress)
         self.Level_Transmitter = AR6451(client = self.client, slaveAddress= level_transmitter_slaveAddress)
         self.Energy_Meter = EnergyMeter_DZS500(client = self.client, slaveAddress= energy_meter_slaveAddress)
@@ -295,9 +296,9 @@ class SCADA_Devices():
             self.SCADA_Data["VFD"]["Motor_Operating_Current"] = self.VFD.readOutputCurrent(Print= Print)
             self.SCADA_Data["VFD"]["RPM"] = 3000#self.VFD.readRunningSpeed(Print= Print)
 
-            self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
+            self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
-            self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
+            self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.total_water_passed#self.Pro_mini.get_Total_Water_Passed()
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
             self.SCADA_Data["Water_Data"]["Water_Level"] = 0#self.Level_Transmitter.Water_Level(Print= Print)
         else:
@@ -374,10 +375,17 @@ SCADA.subscribe()
 
 
 tic = time.time()
+water_tic = time.time()
 
 while True:
     SCADA.loop()
     toc = time.time()
+    water_toc = time.time()
+
+    if(water_toc - water_tic) >= 31:
+        SCADA.total_water_passed += 1
+        water_tic = water_toc
+        print(SCADA.total_water_passed)
 
     if (toc - tic) >= SCADA.data_sending_period:
         SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
