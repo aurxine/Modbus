@@ -176,12 +176,12 @@ class SCADA_Devices():
     def get_Level_Transmitter_Address(self, address = 2):
         self.Level_Transmitter.get_Address(address= address)
         
-    def makeTimeStamp(self):
+    def make_Time_Stamp(self):
         now = datetime.now()
         self.formatted_date_time = now.strftime("%Y-%m-%d %H:%M:%S")
         return self.formatted_date_time
     
-    def parameterQuery(self, type = '', parameter = ''): # returns parameters
+    def parameter_Query(self, type = '', parameter = ''): # returns parameters
         self.updateParameters()
 
         if len(type) > 0:
@@ -196,7 +196,7 @@ class SCADA_Devices():
             return False
         return True
 
-    def executeCommand(self, json_command):
+    def execute_Command(self, json_command):
         if self.is_json(json_command):
             command = json.loads(json_command)
         else:
@@ -204,7 +204,7 @@ class SCADA_Devices():
             return 0
 
         if command["Command"] == "Query":
-            self.mqtt_client.publish(self.mqtt_pub_topic, self.parameterQuery(type = command["Type"], parameter = command["Parameter"]))
+            self.mqtt_client.publish(self.mqtt_pub_topic, self.parameter_Query(type = command["Type"], parameter = command["Parameter"]))
         elif command["Command"] == "Change_ID":
             self.get_ID(command["ID"])
             self.publish(self.mqtt_pub_topic, "New ID set successfully!")
@@ -269,7 +269,7 @@ class SCADA_Devices():
 
     def updateParameters(self, Print = False, random = False):
         self.SCADA_Data["ID"] = self.ID
-        self.SCADA_Data["Time_Stamp"] = self.makeTimeStamp()
+        self.SCADA_Data["Time_Stamp"] = self.make_Time_Stamp()
         self.SCADA_Data["Data_Sending_Period"] = self.data_sending_period
 
         if not random:
@@ -387,7 +387,7 @@ while True:
     
     if SCADA.is_New_Command():
         print(SCADA.command)
-        SCADA.executeCommand(SCADA.command)
+        SCADA.execute_Command(SCADA.command)
 
     else:
         continue
