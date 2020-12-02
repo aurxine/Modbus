@@ -387,11 +387,11 @@ while True:
         if SCADA.SCADA_Data["VFD"]["VFD_Status"] == 1:
             SCADA.total_water_passed += 1
         water_tic = water_toc
-        print(SCADA.total_water_passed)
+        #print(SCADA.total_water_passed)
 
     if (toc - tic) >= SCADA.data_sending_period:
-        SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
-        print(SCADA_Data_Json)
+        SCADA_Data_Json = SCADA.updateParameters(random= False, Print = False)
+        #print(SCADA_Data_Json)
         SCADA.publish(payload= SCADA_Data_Json)
         tic = toc
     
