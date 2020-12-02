@@ -290,14 +290,16 @@ class SCADA_Devices():
             
             if self.SCADA_Data["Energy"]["Load"] != 0:
                 self.SCADA_Data["VFD"]["VFD_Status"] = 1
+                self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))
             else:
                 self.SCADA_Data["VFD"]["VFD_Status"] = 0
+                self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
             self.SCADA_Data["VFD"]["Frequency"] = self.VFD.readOutputFrequency(Print= Print)
             self.SCADA_Data["VFD"]["Motor_Operating_Voltage"] = self.VFD.readOutputVoltage(Print= Print)
             self.SCADA_Data["VFD"]["Motor_Operating_Current"] = self.VFD.readOutputCurrent(Print= Print)
             self.SCADA_Data["VFD"]["RPM"] = 3000#self.VFD.readRunningSpeed(Print= Print)
 
-            self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
+            #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.total_water_passed#self.Pro_mini.get_Total_Water_Passed()
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
@@ -396,7 +398,7 @@ while True:
         tic = toc
     
     if SCADA.is_New_Command():
-        print(SCADA.command)
+        #print(SCADA.command)
         SCADA.execute_Command(SCADA.command)
 
     else:
