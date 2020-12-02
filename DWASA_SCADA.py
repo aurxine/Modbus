@@ -238,6 +238,7 @@ class SCADA_Devices():
 
         elif command["Command"] == "Change_Past_Water_Flow":
             past_water_flow = int(command["Past_Water_Flow"])
+            self.total_water_passed = past_water_flow
             self.save_Water_Flow(water_flow= past_water_flow)
             self.Pro_mini.put_Past_Water_Flow(water_flow= past_water_flow)
             self.publish(topic= self.mqtt_pub_topic, payload= "Water Passed " + str(past_water_flow) + " cubic meter")
