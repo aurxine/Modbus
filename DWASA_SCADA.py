@@ -288,16 +288,18 @@ class SCADA_Devices():
             self.SCADA_Data["Energy"]["Power_Factor"] = self.VFD.readOutputPower(Print = Print)/self.VFD.readInputPower(Print = Print)
             self.SCADA_Data["Energy"]["Load"] = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
             
-            if self.SCADA_Data["Energy"]["Load"] != 0:
-                self.SCADA_Data["VFD"]["VFD_Status"] = 1
-                self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))
-            else:
-                self.SCADA_Data["VFD"]["VFD_Status"] = 0
-                self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
+            
             self.SCADA_Data["VFD"]["Frequency"] = self.VFD.readOutputFrequency(Print= Print)
             self.SCADA_Data["VFD"]["Motor_Operating_Voltage"] = self.VFD.readOutputVoltage(Print= Print)
             self.SCADA_Data["VFD"]["Motor_Operating_Current"] = self.VFD.readOutputCurrent(Print= Print)
             self.SCADA_Data["VFD"]["RPM"] = self.SCADA_Data["VFD"]["Frequency"] * 12000 / 102#self.VFD.readRunningSpeed(Print= Print)
+
+            if self.SCADA_Data["Energy"]["Load"] != 0:
+                self.SCADA_Data["VFD"]["VFD_Status"] = 1
+                self.SCADA_Data["Water_Data"]["Water_Flow"] = self.SCADA_Data["VFD"]["Frequency"]*60/1500
+            else:
+                self.SCADA_Data["VFD"]["VFD_Status"] = 0
+                self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
 
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
@@ -385,7 +387,7 @@ while True:
     toc = time.time()
     water_toc = time.time()
 
-    if(water_toc - water_tic) >= 31:
+    if(water_toc - water_tic) >= 1500 / SCADA.SCADA_Data["VFD"]["Frequency"]:
         if SCADA.SCADA_Data["VFD"]["VFD_Status"] == 1:
             SCADA.total_water_passed += 1
         else:
