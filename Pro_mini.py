@@ -98,6 +98,7 @@ class Pro_mini():
 
     def read_Analog_Value(self):
         self.give_Command(self.commands["Get_Level"])
+        return self.read_Response()
     
 
 # if __name__ == "__main__":
