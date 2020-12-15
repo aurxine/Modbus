@@ -2,9 +2,12 @@ import serial
 import time
 
 class Pro_mini():
-    def __init__(self, Serial_port = '/dev/ttyUSB1', baudrate = 9600, flow_unit = 'cm', time_unit = 'min',
+    def __init__(self, Serial_port = '/dev/ttyUSB1', baudrate = 9600, timeout = 1, flow_unit = 'cm', time_unit = 'min',
                  flow_per_pulse = 1, past_water_flow = 10000):
-        self.serial = serial.Serial(port= Serial_port, baudrate= baudrate, timeout= 1)
+        self.Serial_port = Serial_port
+        self.baudrate = baudrate
+        self.timeout = timeout
+        self.serial = serial.Serial(port= self.Serial_port, baudrate= self.baudrate, timeout= self.timeout)
         self.serial.flush()
         self.commands = {"Get_Count" : 'c', "Get_Level" : 'L', "Reset_Count" : 'R', "Time" : 't',
                         "Turn_On_VFD" : 'O', "Turn_Off_VFD" : 'F', "Open_Valve" : 'V', "Close_Valve" : 'v'}
@@ -27,14 +30,23 @@ class Pro_mini():
         self.units = {'min' : 60, 'second' : 1, 'hour' : 3600, 'day' : 24*3600, 'L' : 1000, 'cm' : 1}
     
     def give_Command(self, command):
-        self.serial.write(str(command).encode('utf-8'))
+        try:
+            self.serial.write(str(command).encode('utf-8'))
+        except serial.serialutil.SerialException:
+            self.serial = serial.Serial(port= self.Serial_port, baudrate= self.baudrate, timeout= self.timeout)
+            self.give_Command(command)
+
     
     def read_Response(self):
-        response = self.serial.readline().decode('utf-8').rstrip()
-        if len(response) != 0:
-            return int(response)
-        else:
-            return 0
+        try:
+            response = self.serial.readline().decode('utf-8').rstrip()
+            if len(response) != 0:
+                return int(response)
+            else:
+                return self.read_Response()
+        except serial.serialutil.SerialException:
+            self.serial = serial.Serial(port= self.Serial_port, baudrate= self.baudrate, timeout= self.timeout)
+            self.read_Response()
 
 
     def get_Flow_Count(self):
