@@ -115,7 +115,9 @@ class SCADA_Devices():
         self.dataframe.iloc[params.index('broker_port'), 1] = port
         self.dataframe.iloc[params.index('broker_address'), 1] = address
 
-        self.dataframe.to_csv('init.csv', index=False)
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+        init_file = os.path.join(current_folder, 'init.csv')
+        self.dataframe.to_csv(init_file, index=False)
 
     def MQTT_Address(self):
         return self.mqtt_address
@@ -208,11 +210,17 @@ class SCADA_Devices():
             self.mqtt_client.publish(self.mqtt_pub_topic, self.parameter_Query(type = command["Type"], parameter = command["Parameter"]))
         elif command["Command"] == "Change_ID":
             self.get_ID(command["ID"])
+            self.dataframe.iloc[params.index('ID'), 1] = command["ID"]
+            current_folder = os.path.dirname(os.path.abspath(__file__))
+            init_file = os.path.join(current_folder, 'init.csv')
+            self.dataframe.to_csv(init_file, index=False)
             self.publish(self.mqtt_pub_topic, "New ID set successfully!")
         elif command["Command"] == "Change_Data_Sending_Period":
             self.data_sending_period = int(command["Data_Sending_Period"])
             self.dataframe.iloc[params.index('data_sending_period'),1] = self.data_sending_period
-            self.dataframe.to_csv('init.csv', index=False)
+            current_folder = os.path.dirname(os.path.abspath(__file__))
+            init_file = os.path.join(current_folder, 'init.csv')
+            self.dataframe.to_csv(init_file, index=False)
 
             self.publish(self.mqtt_pub_topic, "New period " + str(self.data_sending_period) + " seconds set successfully!")
         elif command["Command"] == "Change_MQTT_Data":
