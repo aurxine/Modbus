@@ -10,7 +10,7 @@ class Pro_mini():
         self.serial = serial.Serial(port= self.Serial_port, baudrate= self.baudrate, timeout= self.timeout)
         self.serial.flush()
         self.commands = {"Get_Count" : 'c', "Get_Level" : 'L', "Reset_Count" : 'R', "Time" : 't',
-                        "Turn_On_VFD" : 'O', "Turn_Off_VFD" : 'F', "Open_Valve" : 'V', "Close_Valve" : 'v'}
+                        "Turn_On_VFD" : 'o', "Turn_Off_VFD" : 'O', "Open_Valve" : 'V', "Close_Valve" : 'v'}
         self.flow_unit = flow_unit
         self.time_unit = time_unit
         # Water passed for each pulse in the sensor
@@ -94,13 +94,13 @@ class Pro_mini():
 
     def VFD_On(self):
         self.give_Command(self.commands["Turn_On_VFD"])
-        time.sleep(1)
-        self.give_Command('o')
+        # time.sleep(1)
+        # self.give_Command('o')
 
     def VFD_Off(self):
         self.give_Command(self.commands["Turn_Off_VFD"])
-        time.sleep(1)
-        self.give_Command('f')
+        # time.sleep(1)
+        # self.give_Command('f')
 
     def Valve_Open(self):
         self.give_Command(self.commands["Open_Valve"])
