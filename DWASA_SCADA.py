@@ -267,8 +267,13 @@ class SCADA_Devices():
             self.publish(self.mqtt_pub_topic, "Error in command")
     
     def save_Water_Flow(self, water_flow):
+        self.Pro_mini.put_Past_Water_Flow(water_flow)
         self.dataframe.iloc[params.index('amr_past_water_flow'),1] = water_flow
-        self.dataframe.to_csv('init.csv', index=False)
+        current_folder = os.path.dirname(os.path.abspath(__file__))
+        init_file = os.path.join(current_folder, 'init.csv')
+        self.dataframe.to_csv(init_file, index=False)
+
+        # self.dataframe.to_csv('init.csv', index=False)
 
     def restart(self):
         command = "/usr/bin/sudo /sbin/shutdown -r now"
@@ -304,15 +309,16 @@ class SCADA_Devices():
 
             if self.SCADA_Data["Energy"]["Load"] != 0:
                 self.SCADA_Data["VFD"]["VFD_Status"] = 1
-                self.SCADA_Data["Water_Data"]["Water_Flow"] = self.SCADA_Data["VFD"]["Frequency"]*60/1500
+                
             else:
                 self.SCADA_Data["VFD"]["VFD_Status"] = 0
-                self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
-
+                # self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
+            self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
-            self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.total_water_passed#self.Pro_mini.get_Total_Water_Passed()
+            self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
+            
             self.SCADA_Data["Water_Data"]["Water_Level"] = 0#self.Level_Transmitter.Water_Level(Print= Print)
         else:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
