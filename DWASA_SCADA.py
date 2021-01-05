@@ -315,7 +315,9 @@ class SCADA_Devices():
                 # self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
             self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
-            self.SCADA_Data["Water_Data"]["Water_Pressure"] = 0 # random value
+            analog_val = self.Pro_mini.read_Analog_Value()
+            voltage = 5*analog_val/1023
+            self.SCADA_Data["Water_Data"]["Water_Pressure"] = 400*(voltage - 1)
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
             
