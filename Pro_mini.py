@@ -41,7 +41,10 @@ class Pro_mini():
         try:
             response = self.serial.readline().decode('utf-8').rstrip()
             if len(response) != 0:
-                return float(response)
+                if response.isdigit():
+                    return int(response)
+                else:
+                    return float(response)
             else:
                 return self.read_Response()
         except serial.serialutil.SerialException:
