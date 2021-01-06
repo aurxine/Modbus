@@ -412,7 +412,7 @@ vfd_slaveAddress = int(init.iloc[params.index('vfd_slaveAddress'), 1])
 energy_meter_slaveAddress = int(init.iloc[params.index('energy_meter_slaveAddress'), 1])
 level_transmitter_slaveAddress = int(init.iloc[params.index('level_transmitter_slaveAddress'), 1])
 amr_flow_per_pulse = int(init.iloc[params.index('amr_flow_per_pulse'), 1])
-amr_past_water_flow = int(init.iloc[params.index('amr_past_water_flow'), 1])
+amr_past_water_flow = float(init.iloc[params.index('amr_past_water_flow'), 1])
 ID = int(init.iloc[params.index('ID'), 1])
 data_sending_period = int(init.iloc[params.index('data_sending_period'), 1])
 
