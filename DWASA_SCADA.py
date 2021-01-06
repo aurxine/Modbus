@@ -308,25 +308,23 @@ class SCADA_Devices():
             if data != -1:
                 self.SCADA_Data["Energy"]["Line_CA_Voltage"] = data
             
-            data = self.VFD.readOutputPower(Print = Print)/self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
+            data = self.VFD.readOutputPower(Print = Print)
             if data != -1:
-                self.SCADA_Data["Energy"]["Phase_A_Current"] = data
+                self.SCADA_Data["Energy"]["Phase_A_Current"] = data/self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
 
-            data = self.VFD.readOutputPower(Print = Print)/self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
+            data = self.VFD.readOutputPower(Print = Print)
             if data != -1:
-                self.SCADA_Data["Energy"]["Phase_B_Current"] = data
+                self.SCADA_Data["Energy"]["Phase_B_Current"] = data/self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
 
-            data = self.VFD.readOutputPower(Print = Print)/self.Energy_Meter.readVoltage(phase= 'C', Print = Print)
+            data = self.VFD.readOutputPower(Print = Print)
             if data != -1:
-                self.SCADA_Data["Energy"]["Phase_C_Current"] = data
+                self.SCADA_Data["Energy"]["Phase_C_Current"] = data/self.Energy_Meter.readVoltage(phase= 'C', Print = Print)
 
             data = self.VFD.readOutputPower(Print = Print)
             if data != -1:
                 self.SCADA_Data["Energy"]["Active_Power"] = data
 
-            data = self.VFD.readOutputPower(Print = Print)/self.VFD.readInputPower(Print = Print)
-            if data != -1:
-                self.SCADA_Data["Energy"]["Power_Factor"] = data
+            self.SCADA_Data["Energy"]["Power_Factor"] = self.VFD.readOutputPower(Print = Print)/self.VFD.readInputPower(Print = Print)
 
             data = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
             if not isinstance(data, complex):
@@ -443,8 +441,8 @@ while True:
     toc = time.time()
 
     if (toc - tic) >= SCADA.data_sending_period:
-        SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
-        #print(SCADA_Data_Json)
+        SCADA_Data_Json = SCADA.updateParameters(random= False, Print = False)
+        print(SCADA_Data_Json)
         SCADA.publish(payload= SCADA_Data_Json)
         tic = toc
     
