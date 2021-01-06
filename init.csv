@@ -15,6 +15,6 @@ amr_past_water_flow,66269
 ID,1500
 data_sending_period,30
 broker_address,123.49.33.109
-broker_port,5003
+broker_port,8083
 pub_topic,scada_test
 sub_topic,scada_sub
