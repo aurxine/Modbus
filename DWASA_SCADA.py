@@ -329,7 +329,7 @@ class SCADA_Devices():
                 self.SCADA_Data["Energy"]["Power_Factor"] = data
 
             data = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
-            if data != -1:
+            if not isinstance(data, complex):
                 self.SCADA_Data["Energy"]["Load"] = data
             
             data = self.VFD.readOutputFrequency(Print= Print)
