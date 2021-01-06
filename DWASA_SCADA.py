@@ -396,20 +396,10 @@ SCADA.subscribe()
 
 
 tic = time.time()
-water_tic = time.time()
 
 while True:
     SCADA.loop()
     toc = time.time()
-    water_toc = time.time()
-
-    if(water_toc - water_tic) >= 1500 / SCADA.SCADA_Data["VFD"]["Frequency"]:
-        if SCADA.SCADA_Data["VFD"]["VFD_Status"] == 1:
-            SCADA.total_water_passed += 1
-        else:
-            print("Nothing's happening")
-        water_tic = water_toc
-        #print(SCADA.total_water_passed)
 
     if (toc - tic) >= SCADA.data_sending_period:
         SCADA_Data_Json = SCADA.updateParameters(random= False, Print = True)
