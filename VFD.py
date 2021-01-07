@@ -201,7 +201,7 @@ class VFD_F800():
             print('Cannot connect to the VFD')
             return -1
             
-    def writeRunningFrequency(self, frequency_value, retry_times):
+    def writeRunningFrequency(self, frequency_value):
         if self.client.connect():
             print("Connected to the VFD")
             # Writing to a holding register with the below content.
@@ -212,6 +212,7 @@ class VFD_F800():
                     return 1
                 self.client.write_register(address=1000, value = frequency_value)
             return 0
+
             
         else:
             print('Cannot connect to the VFD')
