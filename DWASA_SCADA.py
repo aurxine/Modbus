@@ -320,47 +320,48 @@ class SCADA_Devices():
             output_power = self.VFD.readOutputPower(Print = Print)
             input_power = self.VFD.readInputPower(Print = Print)
             #experiment shows even if the VFD is off there is some power consumed
-            if output_power > 200: 
-                self.SCADA_Data["VFD"]["VFD_Status"] = 1
-                self.SCADA_Data["Energy"]["Phase_A_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_A_Voltage"]
-                self.SCADA_Data["Energy"]["Phase_B_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
-                self.SCADA_Data["Energy"]["Phase_C_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_C_Voltage"]
-                self.SCADA_Data["Energy"]["Active_Power"] = output_power
-                if input_power > 0:
-                    self.SCADA_Data["Energy"]["Power_Factor"] = output_power/input_power
+            if output_power != -1: 
+                if output_power > 500:
+                    self.SCADA_Data["VFD"]["VFD_Status"] = 1
+                    self.SCADA_Data["Energy"]["Phase_A_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_A_Voltage"]
+                    self.SCADA_Data["Energy"]["Phase_B_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
+                    self.SCADA_Data["Energy"]["Phase_C_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_C_Voltage"]
+                    self.SCADA_Data["Energy"]["Active_Power"] = output_power
+                    if input_power > 0:
+                        self.SCADA_Data["Energy"]["Power_Factor"] = output_power/input_power
 
-                    load = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
-                    if not isinstance(load, complex):
-                        self.SCADA_Data["Energy"]["Load"] = load
-            
-                frequency = self.VFD.readOutputFrequency(Print= Print)
-                if frequency != -1:
-                    self.SCADA_Data["VFD"]["Frequency"] = frequency
-
-                motor_voltage = self.VFD.readOutputVoltage(Print= Print)
-                if motor_voltage != -1:
-                    self.SCADA_Data["VFD"]["Motor_Operating_Voltage"] = motor_voltage
-
-                motor_current = self.VFD.readOutputCurrent(Print= Print)
-                if motor_current != -1:
-                    self.SCADA_Data["VFD"]["Motor_Operating_Current"] = motor_current
-
-                RPM = self.SCADA_Data["VFD"]["Frequency"] * 12000 / 102#self.VFD.readRunningSpeed(Print= Print)
-                if RPM != -1:
-                    self.SCADA_Data["VFD"]["RPM"] = RPM
+                        load = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
+                        if not isinstance(load, complex):
+                            self.SCADA_Data["Energy"]["Load"] = load
                 
-            else:
-                self.SCADA_Data["VFD"]["VFD_Status"] = 0
-                # self.SCADA_Data["Energy"]["Phase_A_Current"] = 0
-                # self.SCADA_Data["Energy"]["Phase_B_Current"] = 0
-                # self.SCADA_Data["Energy"]["Phase_C_Current"] = 0
-                # self.SCADA_Data["Energy"]["Active_Power"] = 0
-                # self.SCADA_Data["Energy"]["Power_Factor"] = 0
-                # self.SCADA_Data["Energy"]["Load"] = 0
-                # self.SCADA_Data["VFD"]["Frequency"] = 0
-                # self.SCADA_Data["VFD"]["Motor_Operating_Current"] = 0
-                # self.SCADA_Data["VFD"]["RPM"] = 0
-                # self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
+                    frequency = self.VFD.readOutputFrequency(Print= Print)
+                    if frequency != -1:
+                        self.SCADA_Data["VFD"]["Frequency"] = frequency
+
+                    motor_voltage = self.VFD.readOutputVoltage(Print= Print)
+                    if motor_voltage != -1:
+                        self.SCADA_Data["VFD"]["Motor_Operating_Voltage"] = motor_voltage
+
+                    motor_current = self.VFD.readOutputCurrent(Print= Print)
+                    if motor_current != -1:
+                        self.SCADA_Data["VFD"]["Motor_Operating_Current"] = motor_current
+
+                    RPM = self.SCADA_Data["VFD"]["Frequency"] * 12000 / 102#self.VFD.readRunningSpeed(Print= Print)
+                    if RPM != -1:
+                        self.SCADA_Data["VFD"]["RPM"] = RPM
+                
+                else:
+                    self.SCADA_Data["VFD"]["VFD_Status"] = 0
+                    self.SCADA_Data["Energy"]["Phase_A_Current"] = 0
+                    self.SCADA_Data["Energy"]["Phase_B_Current"] = 0
+                    self.SCADA_Data["Energy"]["Phase_C_Current"] = 0
+                    self.SCADA_Data["Energy"]["Active_Power"] = 0
+                    self.SCADA_Data["Energy"]["Power_Factor"] = 0
+                    self.SCADA_Data["Energy"]["Load"] = 0
+                    self.SCADA_Data["VFD"]["Frequency"] = 0
+                    self.SCADA_Data["VFD"]["Motor_Operating_Current"] = 0
+                    self.SCADA_Data["VFD"]["RPM"] = 0
+                    self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
 
             
 
