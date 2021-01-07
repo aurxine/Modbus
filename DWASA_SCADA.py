@@ -241,14 +241,14 @@ class SCADA_Devices():
             self.dataframe.to_csv('init.csv', index=False)
         
         elif command["Command"] == "Change_VFD_Frequency":
-            self.publish(topic= self.mqtt_pub_topic, payload= "Changing Frequency")
+            # self.publish(topic= self.mqtt_pub_topic, payload= "Changing Frequency")
             frequency = float(command["Frequency"])*100
             # retry = int(command["Retry"])
             response = self.VFD.writeRunningFrequency(frequency_value= int(frequency))#, retry_times= retry)
             if response == 0:
                 self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was unsuccessfull")
             else:
-                self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was ssuccessfull")
+                self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was successfull")
 
         elif command["Command"] == "Change_Past_Water_Flow":
             past_water_flow = int(command["Past_Water_Flow"])

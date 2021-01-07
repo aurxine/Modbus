@@ -1,3 +1,6 @@
+# pylint: disable=unused-variable
+# pylint: enable=too-many-lines
+
 from pymodbus.client.sync import ModbusSerialClient
 import time
 import serial
@@ -210,8 +213,11 @@ class VFD_F800():
                 time.sleep(0.1)
                 frequency = self.readOutputFrequency()
                 if frequency == frequency_value:
-                    return 1
+                    break
                 
+            frequency = self.readOutputFrequency()
+            if frequency == frequency_value:
+                return 1
             return 0
 
             
