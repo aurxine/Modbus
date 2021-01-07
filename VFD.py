@@ -213,11 +213,7 @@ class VFD_F800():
                 time.sleep(0.1)
                 frequency = self.readOutputFrequency()
                 if frequency == frequency_value:
-                    break
-                
-            frequency = self.readOutputFrequency()
-            if frequency == frequency_value:
-                return 1
+                    return 1
             return 0
 
             
