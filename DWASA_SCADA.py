@@ -351,15 +351,15 @@ class SCADA_Devices():
                 
             else:
                 self.SCADA_Data["VFD"]["VFD_Status"] = 0
-                self.SCADA_Data["Energy"]["Phase_A_Current"] = 0
-                self.SCADA_Data["Energy"]["Phase_B_Current"] = 0
-                self.SCADA_Data["Energy"]["Phase_C_Current"] = 0
-                self.SCADA_Data["Energy"]["Active_Power"] = 0
-                self.SCADA_Data["Energy"]["Power_Factor"] = 0
-                self.SCADA_Data["Energy"]["Load"] = 0
-                self.SCADA_Data["VFD"]["Frequency"] = 0
-                self.SCADA_Data["VFD"]["Motor_Operating_Current"] = 0
-                self.SCADA_Data["VFD"]["RPM"] = 0
+                # self.SCADA_Data["Energy"]["Phase_A_Current"] = 0
+                # self.SCADA_Data["Energy"]["Phase_B_Current"] = 0
+                # self.SCADA_Data["Energy"]["Phase_C_Current"] = 0
+                # self.SCADA_Data["Energy"]["Active_Power"] = 0
+                # self.SCADA_Data["Energy"]["Power_Factor"] = 0
+                # self.SCADA_Data["Energy"]["Load"] = 0
+                # self.SCADA_Data["VFD"]["Frequency"] = 0
+                # self.SCADA_Data["VFD"]["Motor_Operating_Current"] = 0
+                # self.SCADA_Data["VFD"]["RPM"] = 0
                 # self.SCADA_Data["Water_Data"]["Water_Flow"] = 0
 
             
