@@ -312,9 +312,9 @@ class SCADA_Devices():
             output_power = self.VFD.readOutputPower(Print = Print)
             input_power = self.VFD.readInputPower(Print = Print)
             if output_power != -1:
-                self.SCADA_Data["Energy"]["Phase_A_Current"] = output_power/self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
-                self.SCADA_Data["Energy"]["Phase_B_Current"] = output_power/self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
-                self.SCADA_Data["Energy"]["Phase_C_Current"] = output_power/self.Energy_Meter.readVoltage(phase= 'C', Print = Print)
+                self.SCADA_Data["Energy"]["Phase_A_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_A_Voltage"]
+                self.SCADA_Data["Energy"]["Phase_B_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
+                self.SCADA_Data["Energy"]["Phase_C_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_C_Voltage"]
                 self.SCADA_Data["Energy"]["Active_Power"] = output_power
                 if input_power != -1:
                     self.SCADA_Data["Energy"]["Power_Factor"] = output_power/input_power
@@ -350,7 +350,7 @@ class SCADA_Devices():
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
             analog_val = self.Pro_mini.get_Pressure_Transmitter_Analog_Value()
             voltage = 5*analog_val/1023
-            self.SCADA_Data["Water_Data"]["Water_Pressure"] = 400*(voltage - 1)
+            self.SCADA_Data["Water_Data"]["Water_Pressure"] = 400*(voltage - 1)/9.8
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
             
