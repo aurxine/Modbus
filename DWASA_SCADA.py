@@ -316,11 +316,12 @@ class SCADA_Devices():
                 self.SCADA_Data["Energy"]["Phase_B_Current"] = output_power/self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
                 self.SCADA_Data["Energy"]["Phase_C_Current"] = output_power/self.Energy_Meter.readVoltage(phase= 'C', Print = Print)
                 self.SCADA_Data["Energy"]["Active_Power"] = output_power
-                self.SCADA_Data["Energy"]["Power_Factor"] = output_power/input_power
+                if input_power != -1:
+                    self.SCADA_Data["Energy"]["Power_Factor"] = output_power/input_power
 
-                load = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
-                if not isinstance(load, complex):
-                    self.SCADA_Data["Energy"]["Load"] = load
+                    load = (self.SCADA_Data["Energy"]["Active_Power"]**2 - self.SCADA_Data["Energy"]["Power_Factor"]**2)**0.5
+                    if not isinstance(load, complex):
+                        self.SCADA_Data["Energy"]["Load"] = load
             
             frequency = self.VFD.readOutputFrequency(Print= Print)
             if frequency != -1:
