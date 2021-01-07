@@ -320,7 +320,7 @@ class SCADA_Devices():
             output_power = self.VFD.readOutputPower(Print = Print)
             input_power = self.VFD.readInputPower(Print = Print)
             #experiment shows even if the VFD is off there is some power consumed
-            if output_power > 500: 
+            if output_power > 200: 
                 self.SCADA_Data["VFD"]["VFD_Status"] = 1
                 self.SCADA_Data["Energy"]["Phase_A_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_A_Voltage"]
                 self.SCADA_Data["Energy"]["Phase_B_Current"] = output_power/self.SCADA_Data["Energy"]["Phase_B_Voltage"]
