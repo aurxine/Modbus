@@ -128,6 +128,7 @@ class SCADA_Devices():
     def on_message(self, client, userdata, message):
         Message = str(message.payload.decode("utf-8"))
         self.command = Message
+        self.execute_Command(Message)
         print("message received:", Message)
     
     def is_New_Command(self):
@@ -438,9 +439,9 @@ while True:
         SCADA.publish(payload= SCADA_Data_Json)
         tic = toc
     
-    if SCADA.is_New_Command():
-        #print(SCADA.command)
-        SCADA.execute_Command(SCADA.command)
+    # if SCADA.is_New_Command():
+    #     #print(SCADA.command)
+    #     SCADA.execute_Command(SCADA.command)
 
     else:
         continue
