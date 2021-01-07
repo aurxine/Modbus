@@ -241,8 +241,8 @@ class SCADA_Devices():
             self.dataframe.to_csv('init.csv', index=False)
         
         elif command["Command"] == "Change_VFD_Frequency":
-            frequency = float(command["Frequency"])*100
-            response = self.VFD.writeRunningFrequency(frequency_value= int(frequency))
+            frequency = int(command["Frequency"])*100
+            response = self.VFD.writeRunningFrequency(frequency_value= frequency)
             if response == 1:
                 self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was successfull")
             else:
