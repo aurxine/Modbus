@@ -243,8 +243,8 @@ class SCADA_Devices():
         elif command["Command"] == "Change_VFD_Frequency":
             self.publish(topic= self.mqtt_pub_topic, payload= "Changing Frequency")
             frequency = float(command["Frequency"])*100
-            retry = int(command["Retry"])
-            response = self.VFD.writeRunningFrequency(frequency_value= int(frequency), retry_times= retry)
+            # retry = int(command["Retry"])
+            response = self.VFD.writeRunningFrequency(frequency_value= int(frequency))#, retry_times= retry)
             if response == 0:
                 self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was unsuccessfull")
             else:
