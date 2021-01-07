@@ -212,11 +212,11 @@ class VFD_F800():
                 frequency = self.readOutputFrequency()
                 if frequency == frequency_value:
                     return 1
-            return -1
+            return 0
             
         else:
             print('Cannot connect to the VFD')
-            return -1
+            return 0
 
 
 #vfd = VFD_F800(port= 'COM13', baudrate= 9600, slaveAddress= 6)

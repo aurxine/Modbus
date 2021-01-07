@@ -242,8 +242,11 @@ class SCADA_Devices():
         
         elif command["Command"] == "Change_VFD_Frequency":
             frequency = int(command["Frequency"])*100
-            self.VFD.writeRunningFrequency(frequency_value= frequency)
-            self.publish(topic= self.mqtt_pub_topic, payload= "Frequency changed to " + str(frequency/100) + " Hz")
+            response = self.VFD.writeRunningFrequency(frequency_value= frequency)
+            if response == 1:
+                self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was successfull")
+            else:
+                self.publish(topic= self.mqtt_pub_topic, payload= "Frequency change " + str(frequency/100) + " Hz was unsuccessfull")
 
         elif command["Command"] == "Change_Past_Water_Flow":
             past_water_flow = int(command["Past_Water_Flow"])
