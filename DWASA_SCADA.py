@@ -64,6 +64,9 @@ class SCADA_Devices():
         self.data_sending_period = data_sending_period
         self.mqtt_client = mqtt.Client("Client", transport= 'websockets')
         self.mqtt_client.on_message = self.on_message
+        self.mqtt_client.on_connect = self.on_connect
+        self.mqtt_client.on_disconnect = self.on_disconnect
+
         self.command = ''
         self.last_command = ''
         self.mqtt_pub_topic = 'scada_test'
@@ -130,6 +133,25 @@ class SCADA_Devices():
         self.command = Message
         self.execute_Command(Message)
         print("message received:", Message)
+    
+    def on_connect(self, client, userdata, flags, rc):
+        if rc==0:
+            client.connected_flag=True #set flag
+            print("connected OK")
+        else:
+            print("Bad connection Returned code=",rc)
+            client.bad_connection_flag=True
+
+    def on_disconnect(self, client, userdata, rc):
+        # logging.info("disconnecting reason  "  +str(rc))
+        print("Client disconnected")
+        client.connected_flag=False
+        client.disconnect_flag=True
+        command = "/usr/bin/sudo /sbin/shutdown -r now"
+        import subprocess
+        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+        output = process.communicate()[0]
+        print(output)
     
     def is_New_Command(self):
         if self.last_command != self.command:

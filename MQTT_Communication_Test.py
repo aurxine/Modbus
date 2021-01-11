@@ -63,4 +63,5 @@ while True:
     # MQTT_Client.loop()
     count += 1
     MQTT_Client.publish(topic=pub_topic, payload="message count: " + str(count))
+    print("Inside loop")
     time.sleep(2)
