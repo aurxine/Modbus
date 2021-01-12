@@ -186,6 +186,9 @@ class SCADA_Devices():
             self.mqtt_pub_topic = topic
             self.mqtt_client.publish(self.mqtt_pub_topic, payload, retain= True, qos= 1)
     
+    def loop_start(self):
+        self.mqtt_client.loop_start()
+
     def loop(self):
         self.mqtt_client.loop()
 
@@ -472,9 +475,9 @@ SCADA.subscribe()
 
 
 tic = time.time()
-
+SCADA.loop_start()
 while True:
-    SCADA.loop()
+    # SCADA.loop()
     toc = time.time()
 
     if (toc - tic) >= SCADA.data_sending_period:
