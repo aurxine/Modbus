@@ -38,6 +38,7 @@ class FlowMeter_MF5712():
         else:
             print('Cannot connect to the Flow Meter')
             return -1
+            
     def read_flow_meter_register(self, Print = True):
         if self.client.connect():
             print("Flow Meter Connected to the Modbus Server/Slave")

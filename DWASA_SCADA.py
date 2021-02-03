@@ -25,6 +25,7 @@ from pymodbus.client.sync import ModbusSerialClient
 import pandas as pd
 import sys
 from Pro_mini import Pro_mini
+from Flow_Meter import FlowMeter_MF5712
 
 
 class SCADA_Devices():
@@ -61,6 +62,7 @@ class SCADA_Devices():
         self.Energy_Meter = EnergyMeter_DZS500(client = self.client, slaveAddress= energy_meter_slaveAddress)
         self.Pro_mini = Pro_mini(Serial_port = Serial_port, flow_per_pulse= amr_flow_per_pulse, 
                                     past_water_flow= amr_past_water_flow)
+        self.Flow_Meter = FlowMeter_MF5712(client= self.client)
         self.data_sending_period = data_sending_period
         self.mqtt_client = mqtt.Client("Client", transport= 'websockets')
         self.mqtt_client.on_message = self.on_message
@@ -101,7 +103,8 @@ class SCADA_Devices():
                     "Water_Flow":10000,
                     "Water_Pressure":341,
                     "Water_Meter_Reading":1234131,
-                    "Water_Level":32
+                    "Water_Level":32,
+                    "Chlorine":235.45
                 }
             }
     
@@ -296,6 +299,14 @@ class SCADA_Devices():
         elif command["Command"] == "OFF":
             self.Pro_mini.VFD_Off()
             self.publish(self.mqtt_pub_topic, "VFD Turned OFF")
+        
+        elif command["Command"] == "Valve_Open":
+            self.Pro_mini.Valve_Open()
+            self.publish(self.mqtt_pub_topic, "Valve Opened")
+        
+        elif command["Command"] == "Valve_Close":
+            self.Pro_mini.Valve_Close()
+            self.publish(self.mqtt_pub_topic, "Valve Closed")
 
         else:
             self.publish(self.mqtt_pub_topic, "Error in command")
@@ -394,13 +405,15 @@ class SCADA_Devices():
             
             self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
-            analog_val = self.Pro_mini.get_Pressure_Transmitter_Value()
-            voltage = 5*analog_val/1023
-            self.SCADA_Data["Water_Data"]["Water_Pressure"] = 400*(voltage - 1)/9.8
+            # analog_val = self.Pro_mini.get_Pressure_Transmitter_Value()
+            # voltage = 5*analog_val/1023
+            self.SCADA_Data["Water_Data"]["Water_Pressure"] = self.get_Pressure_Transmitter_Value()#400*(voltage - 1)/9.8
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
             
-            self.SCADA_Data["Water_Data"]["Water_Level"] = 0#self.Level_Transmitter.Water_Level(Print= Print)
+            self.SCADA_Data["Water_Data"]["Water_Level"] = self.Pro_mini.get_Level_Transmitter_Value() #0#self.Level_Transmitter.Water_Level(Print= Print)
+            self.SCADA_Data["Water_Data"]["Chlorine"] = self.Flow_Meter.read_mass_flow_meter_register(Print= Print)
+
         else:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
             self.SCADA_Data["Energy"]["Phase_B_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'B', Print = Print)
