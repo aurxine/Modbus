@@ -394,7 +394,7 @@ class SCADA_Devices():
             
             self.SCADA_Data["Water_Data"]["Water_Flow"] = self.Pro_mini.get_Flow_Rate()
             #self.SCADA_Data["Water_Data"]["Water_Flow"] = 60/(31 + randint(-1, 1))#self.Pro_mini.get_Flow_Rate()
-            analog_val = self.Pro_mini.get_Pressure_Transmitter_Analog_Value()
+            analog_val = self.Pro_mini.get_Pressure_Transmitter_Value()
             voltage = 5*analog_val/1023
             self.SCADA_Data["Water_Data"]["Water_Pressure"] = 400*(voltage - 1)/9.8
             self.SCADA_Data["Water_Data"]["Water_Meter_Reading"] = self.Pro_mini.get_Total_Water_Passed()

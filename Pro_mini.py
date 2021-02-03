@@ -9,8 +9,9 @@ class Pro_mini():
         self.timeout = timeout
         self.serial = serial.Serial(port= self.Serial_port, baudrate= self.baudrate, timeout= self.timeout)
         self.serial.flush()
-        self.commands = {"Get_Count" : 'c', "Get_Level" : 'P', "Reset_Count" : 'R', "Time" : 't',
-                        "Turn_On_VFD" : 'o', "Turn_Off_VFD" : 'O', "Open_Valve" : 'V', "Close_Valve" : 'v'}
+        self.commands = {"Get_Count" : 'c', "Get_Level" : 'L', "Reset_Count" : 'R', "Time" : 't',
+                        "Turn_On_VFD" : 'o', "Turn_Off_VFD" : 'O', "Open_Valve" : 'V', "Close_Valve" : 'v', 'Extra_Relay_On' : 'F',
+                         'Extra_Relay_Off' : 'f', 'Get_Pressure' : 'P'}
         self.flow_unit = flow_unit
         self.time_unit = time_unit
         # Water passed for each pulse in the sensor
@@ -111,10 +112,13 @@ class Pro_mini():
     def Valve_Close(self):
         self.give_Command(self.commands["Close_Valve"])
 
-    def get_Pressure_Transmitter_Analog_Value(self):
+    def get_Pressure_Transmitter_Value(self):
+        self.give_Command(self.commands["Get_Pressure"])
+        return self.read_Response()
+
+    def get_Level_Transmitter_Value(self):
         self.give_Command(self.commands["Get_Level"])
         return self.read_Response()
-    
 
 # if __name__ == "__main__":
 #     pro_mini = Pro_mini(Serial_port= 'COM3')
