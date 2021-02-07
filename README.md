@@ -47,6 +47,7 @@ In ```writeTime(self, value, unit='seconds')``` method we can write value of tim
 dzs500.writeTime(value=12, unit='seconds')
 dzs500.writeTime(value=50, unit='minutes')
 ```
+![alt text](https://github.com/sarahfl0/scada/blob/main/scada.png?raw=true)
 
 ## Contributors
 
