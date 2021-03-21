@@ -11,9 +11,9 @@ vfd_slaveAddress,6
 energy_meter_slaveAddress,3
 level_transmitter_slaveAddress,2
 amr_flow_per_pulse,1
-amr_past_water_flow,160881.0
+amr_past_water_flow,275799.0
 ID,1500
-data_sending_period,30
+data_sending_period,10
 broker_address,123.49.33.109
 broker_port,8083
 pub_topic,scada_test
