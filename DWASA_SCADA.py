@@ -412,7 +412,10 @@ class SCADA_Devices():
             self.save_Water_Flow(water_flow= self.SCADA_Data["Water_Data"]["Water_Meter_Reading"])
             
             self.SCADA_Data["Water_Data"]["Water_Level"] = self.Pro_mini.get_Level_Transmitter_Value() #0#self.Level_Transmitter.Water_Level(Print= Print)
-            self.SCADA_Data["Water_Data"]["Chlorine"] = self.Flow_Meter.read_mass_flow_meter_register(Print= Print)
+            if self.Flow_Meter.read_mass_flow_meter_register(Print= Print) == -1:
+                self.SCADA_Data["Water_Data"]["Chlorine"] = 0
+            else:
+                self.SCADA_Data["Water_Data"]["Chlorine"] = self.Flow_Meter.read_mass_flow_meter_register(Print= Print)
 
         else:
             self.SCADA_Data["Energy"]["Phase_A_Voltage"] = 240 + randint(-5, 5)/10#self.Energy_Meter.readVoltage(phase= 'A', Print = Print)
